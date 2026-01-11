@@ -2,95 +2,28 @@ package frames
 
 import "time"
 
-var Clock = FrameType{
-	GetFrame:  getClockFrame,
-	GetLength: getClockLength,
+var DigitalClock = FrameType{
+	GetFrame:  getDigitalClockFrame,
+	GetLength: getDigitalClockLength,
 	GetSleep:  DefaultGetSleep(),
 }
 
 var digits = map[rune][]string{
-	'0': {
-		" █████ ",
-		"██   ██",
-		"██   ██",
-		"██   ██",
-		" █████ ",
-	},
-	'1': {
-		"   ██  ",
-		" ████  ",
-		"   ██  ",
-		"   ██  ",
-		" █████ ",
-	},
-	'2': {
-		" █████ ",
-		"     ██",
-		" █████ ",
-		"██     ",
-		"███████",
-	},
-	'3': {
-		"██████ ",
-		"     ██",
-		" █████ ",
-		"     ██",
-		"██████ ",
-	},
-	'4': {
-		"██   ██",
-		"██   ██",
-		"███████",
-		"     ██",
-		"     ██",
-	},
-	'5': {
-		"███████",
-		"██     ",
-		"██████ ",
-		"     ██",
-		"██████ ",
-	},
-	'6': {
-		" █████ ",
-		"██     ",
-		"██████ ",
-		"██   ██",
-		" █████ ",
-	},
-	'7': {
-		"███████",
-		"     ██",
-		"    ██ ",
-		"   ██  ",
-		"   ██  ",
-	},
-	'8': {
-		" █████ ",
-		"██   ██",
-		" █████ ",
-		"██   ██",
-		" █████ ",
-	},
-	'9': {
-		" █████ ",
-		"██   ██",
-		" ██████",
-		"     ██",
-		" █████ ",
-	},
-	':': {
-		"       ",
-		"   ██  ",
-		"       ",
-		"   ██  ",
-		"       ",
-	},
+	'0': {" █████ ", "██   ██", "██   ██", "██   ██", " █████ "},
+	'1': {"   ██  ", " ████  ", "   ██  ", "   ██  ", " █████ "},
+	'2': {" █████ ", "     ██", " █████ ", "██     ", "███████"},
+	'3': {"██████ ", "     ██", " █████ ", "     ██", "██████ "},
+	'4': {"██   ██", "██   ██", "███████", "     ██", "     ██"},
+	'5': {"███████", "██     ", "██████ ", "     ██", "██████ "},
+	'6': {" █████ ", "██     ", "██████ ", "██   ██", " █████ "},
+	'7': {"███████", "     ██", "    ██ ", "   ██  ", "   ██  "},
+	'8': {" █████ ", "██   ██", " █████ ", "██   ██", " █████ "},
+	'9': {" █████ ", "██   ██", " ██████", "     ██", " █████ "},
+	':': {"       ", "   ██  ", "       ", "   ██  ", "       "},
 }
 
-func getClockFrame(i int) string {
+func getDigitalClockFrame(i int) string {
 	now := time.Now().Format("15:04:05")
-
 	lines := make([]string, 5)
 
 	for _, ch := range now {
@@ -100,14 +33,13 @@ func getClockFrame(i int) string {
 		}
 	}
 
-	output := "\n"
+	out := "\n"
 	for _, line := range lines {
-		output += line + "\n"
+		out += line + "\n"
 	}
-
-	return output
+	return out
 }
 
-func getClockLength() int {
-	return 0 // infinite loop clock
+func getDigitalClockLength() int {
+	return 0 // infinite
 }
