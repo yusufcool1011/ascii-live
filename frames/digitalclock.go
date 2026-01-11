@@ -1,6 +1,9 @@
 package frames
 
-import "time"
+import (
+	"strings"
+	"time"
+)
 
 var DigitalClock = FrameType{
 	GetFrame:  getDigitalClockFrame,
@@ -9,37 +12,125 @@ var DigitalClock = FrameType{
 }
 
 var digits = map[rune][]string{
-	'0': {" █████ ", "██   ██", "██   ██", "██   ██", " █████ "},
-	'1': {"   ██  ", " ████  ", "   ██  ", "   ██  ", " █████ "},
-	'2': {" █████ ", "     ██", " █████ ", "██     ", "███████"},
-	'3': {"██████ ", "     ██", " █████ ", "     ██", "██████ "},
-	'4': {"██   ██", "██   ██", "███████", "     ██", "     ██"},
-	'5': {"███████", "██     ", "██████ ", "     ██", "██████ "},
-	'6': {" █████ ", "██     ", "██████ ", "██   ██", " █████ "},
-	'7': {"███████", "     ██", "    ██ ", "   ██  ", "   ██  "},
-	'8': {" █████ ", "██   ██", " █████ ", "██   ██", " █████ "},
-	'9': {" █████ ", "██   ██", " ██████", "     ██", " █████ "},
-	':': {"       ", "   ██  ", "       ", "   ██  ", "       "},
+	'0': {
+		" █████ ",
+		"██   ██",
+		"██   ██",
+		"██   ██",
+		" █████ ",
+	},
+	'1': {
+		"   ██  ",
+		" ████  ",
+		"   ██  ",
+		"   ██  ",
+		" █████ ",
+	},
+	'2': {
+		" █████ ",
+		"     ██",
+		" █████ ",
+		"██     ",
+		"███████",
+	},
+	'3': {
+		"██████ ",
+		"     ██",
+		" █████ ",
+		"     ██",
+		"██████ ",
+	},
+	'4': {
+		"██   ██",
+		"██   ██",
+		"███████",
+		"     ██",
+		"     ██",
+	},
+	'5': {
+		"███████",
+		"██     ",
+		"██████ ",
+		"     ██",
+		"██████ ",
+	},
+	'6': {
+		" █████ ",
+		"██     ",
+		"██████ ",
+		"██   ██",
+		" █████ ",
+	},
+	'7': {
+		"███████",
+		"     ██",
+		"    ██ ",
+		"   ██  ",
+		"   ██  ",
+	},
+	'8': {
+		" █████ ",
+		"██   ██",
+		" █████ ",
+		"██   ██",
+		" █████ ",
+	},
+	'9': {
+		" █████ ",
+		"██   ██",
+		" ██████",
+		"     ██",
+		" █████ ",
+	},
+	':': {
+		"       ",
+		"   ██  ",
+		"       ",
+		"   ██  ",
+		"       ",
+	},
 }
 
 func getDigitalClockFrame(i int) string {
-	now := time.Now().Format("15:04:05")
-	lines := make([]string, 5)
+	// Eastern Time (handles EST/EDT automatically)
+	loc, err := time.LoadLocation("America/New_York")
+	if err != nil {
+		loc = time.UTC
+	}
 
+	now := time.Now().In(loc).Format("15:04:05")
+
+	lines := make([]string, 5)
 	for _, ch := range now {
 		glyph := digits[ch]
-		for i := 0; i < 5; i++ {
-			lines[i] += glyph[i] + "  "
+		for j := 0; j < 5; j++ {
+			lines[j] += glyph[j] + "  "
 		}
 	}
 
-	out := "\n"
-	for _, line := range lines {
-		out += line + "\n"
+	// Simple, terminal-safe padding
+	topPadding := 5
+	leftPadding := 4
+
+	var out strings.Builder
+	for i := 0; i < topPadding; i++ {
+		out.WriteString("\n")
 	}
-	return out
+
+	for _, line := range lines {
+		out.WriteString(strings.Repeat(" ", leftPadding))
+		out.WriteString(line)
+		out.WriteString("\n")
+	}
+
+	// Optional label
+	out.WriteString("\n")
+	out.WriteString(strings.Repeat(" ", leftPadding+10))
+	out.WriteString("ET\n")
+
+	return out.String()
 }
 
 func getDigitalClockLength() int {
-	return 0 // infinite
+	return 0 // infinite animation
 }
